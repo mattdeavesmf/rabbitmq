@@ -20,6 +20,7 @@ try {
 	$channel = $connection->channel();
 } catch (Exception $e) {
 	echo $e->getMessage();
+	exit;
 }
 
 $channel->queue_declare('task_queue', false, true, false, false);

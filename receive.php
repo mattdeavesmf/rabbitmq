@@ -9,16 +9,21 @@
 *
 * Notes
 *	Run multiples of this script to have mulitple workers picking up tasks from the queue
-*
+*	To see the status of the queues run:
+*	rabbitmqctl list_queues name messages_ready messages_unacknowledged
 *
 */
 
 require_once __DIR__ . '/vendor/autoload.php';
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 
-$connection = new AMQPStreamConnection('localhost', 5672, 'guest', 'guest');
-$channel = $connection->channel();
-
+try {
+	$connection = new AMQPStreamConnection('localhost', 5672, 'guest', 'guest');
+	$channel = $connection->channel();
+} catch (Exception $e) {
+	echo $e->getMessage();
+	exit;
+}
 $channel->queue_declare('task_queue', false, true, false, false);  //true declares the queue as permanent so RabbitMQ can crash/restart
 
 echo ' [*] Waiting for messages. To exit press CTRL+C', "\n";
